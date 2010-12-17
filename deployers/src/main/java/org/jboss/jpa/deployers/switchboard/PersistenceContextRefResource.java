@@ -28,8 +28,11 @@ import javax.persistence.PersistenceContextType;
 import org.jboss.jpa.deployment.ManagedEntityManagerFactory;
 import org.jboss.jpa.deployment.PersistenceUnitDeployment;
 import org.jboss.jpa.spi.PersistenceUnitRegistry;
+import org.jboss.jpa.tx.TransactionScopedEntityManager;
+import org.jboss.jpa.util.ExtendedEntityManager;
 import org.jboss.switchboard.javaee.environment.PersistenceContextRefType;
 import org.jboss.switchboard.spi.Resource;
+
 
 /**
  *
@@ -80,20 +83,24 @@ public class PersistenceContextRefResource implements Resource
    @Override
    public Object getTarget()
    {
-      // TODO:  both of the following cases are wrong and a deeper fix is needed that addresses
-      // how we manage the PersistenceContext
+      ManagedEntityManagerFactory factory =
+         ((PersistenceUnitDeployment)PersistenceUnitRegistry.getPersistenceUnit(puSupplier)).getManagedFactory();
+      if (factory == null)
+      {
+         throw new RuntimeException("could not find persistenceUnit " + puSupplier);
+      }
       boolean extendedPc = PersistenceContextType.EXTENDED.equals(pcRef.getPersistenceContextType());
+
       if (extendedPc)
       {
-         return PersistenceUnitRegistry.getPersistenceUnit(puSupplier).getXPCResolver().getExtendedPersistenceContext(puSupplier);
+         return new ExtendedEntityManager(factory.getKernelName());
       }
       else
       {
-         ManagedEntityManagerFactory managedEntityManagerFactory = ((PersistenceUnitDeployment)PersistenceUnitRegistry.getPersistenceUnit(puSupplier)).getManagedFactory();
-         return managedEntityManagerFactory.getEntityManagerFactory();
+         return new TransactionScopedEntityManager(factory);
       }
    }
-   
+
    @Override
    public String toString()
    {
