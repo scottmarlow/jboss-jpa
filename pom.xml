@@ -204,4 +204,12 @@
       <javax.persistence.groupId>org.hibernate.javax.persistence</javax.persistence.groupId>
       <javax.persistence.artifactId>hibernate-jpa-2.0-api</javax.persistence.artifactId>
    </properties>
+
+  <!-- SCM -->
+  <scm>
+    <connection>scm:git:git://github.com/jboss/jboss-jpa.git</connection>
+    <developerConnection>scm:git:git@github.com:jboss/jboss-jpa.git</developerConnection>
+    <url>http://github.com/jboss/jboss-jpa</url>
+  </scm>
+
 </project>
