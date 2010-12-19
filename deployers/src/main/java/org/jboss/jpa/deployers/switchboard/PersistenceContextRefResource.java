@@ -30,21 +30,29 @@ import org.jboss.jpa.deployment.PersistenceUnitDeployment;
 import org.jboss.jpa.spi.PersistenceUnitRegistry;
 import org.jboss.jpa.tx.TransactionScopedEntityManager;
 import org.jboss.jpa.util.ExtendedEntityManager;
+import org.jboss.logging.Logger;
 import org.jboss.switchboard.javaee.environment.PersistenceContextRefType;
 import org.jboss.switchboard.spi.Resource;
 
 
+
 /**
+ * The PersistenceContext (PC) for a bean, is the EntityManager (EM) that
+ * will be used to access it.  Think of potentially, separate EM (different name) per bean
+ * in the transaction but possibly the same Database connection shared for
+ * each EM (via EE sharing of managed connections).  Or same EM (same name) for each bean
+ * in the transaction.  The third case, would be separate EM (different name) per bean
+ * in the transaction and different resource managers (multiple DB servers).
  *
- * <p>
- *
- * </p>
+ * The Extended PersistenceContext (XPC) has the same capabilities as above, with an extended lifetime that
+ * is potentially long term.  Work done outside of a transaction, is queued up until the next transaction is
+ * committed or rolled back.  Work done inside of a transaction is committed like a regular PC would do.
  *
  * @author Scott Marlow
  */
 public class PersistenceContextRefResource implements Resource
 {
-
+   private static final Logger log = Logger.getLogger(PersistenceContextRefResource.class);
    private final String puSupplier;
    private final PersistenceContextRefType pcRef;
 
@@ -67,38 +75,31 @@ public class PersistenceContextRefResource implements Resource
    }
 
    /**
-    * The PersistenceContext (PC) for a bean, is the EntityManager (EM) that
-    * will be used to access it.  Think of potentially, separate EM (different name) per bean
-    * in the transaction but possibly the same Database connection shared for
-    * each EM (via EE sharing of managed connections).  Or same EM (same name) for each bean
-    * in the transaction.  The third case, would be separate EM (different name) per bean
-    * in the transaction and different resource managers (multiple DB servers).
-    *
-    * The Extended PersistenceContext (XPC) has the same capabilities as above, with an extended lifetime that
-    * is potentially long term.  Work done outside of a transaction, is queued up until the next transaction is
-    * committed or rolled back.  Work done inside of a transaction is committed like a PC would do.
-    *
     * @return an object that can be bound that represents the target PersistentContext.
     */
    @Override
    public Object getTarget()
    {
+      boolean extendedPc = PersistenceContextType.EXTENDED.equals(pcRef.getPersistenceContextType());
       ManagedEntityManagerFactory factory =
-         ((PersistenceUnitDeployment)PersistenceUnitRegistry.getPersistenceUnit(puSupplier)).getManagedFactory();
+      ((PersistenceUnitDeployment)PersistenceUnitRegistry.getPersistenceUnit(puSupplier)).getManagedFactory();
       if (factory == null)
       {
          throw new RuntimeException("could not find persistenceUnit " + puSupplier);
       }
-      boolean extendedPc = PersistenceContextType.EXTENDED.equals(pcRef.getPersistenceContextType());
 
+      Object target;
       if (extendedPc)
       {
-         return new ExtendedEntityManager(factory.getKernelName());
+         target = new ExtendedEntityManager(puSupplier);
       }
       else
       {
-         return new TransactionScopedEntityManager(factory);
+         target = new TransactionScopedEntityManager(factory);
       }
+      if(log.isTraceEnabled())  
+         log.trace("returning target = " + target);
+      return target;
    }
 
    @Override

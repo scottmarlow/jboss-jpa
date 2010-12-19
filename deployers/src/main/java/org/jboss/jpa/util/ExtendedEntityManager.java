@@ -1,7 +1,7 @@
 package org.jboss.jpa.util;
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -41,7 +41,7 @@ public class ExtendedEntityManager extends JPAEntityManagerDelegator implements 
 {
    private static final long serialVersionUID = 2L;
    private String identity;
-   private static XPCResolver xpcResolver;
+   private static volatile XPCResolver xpcResolver;
 
    public ExtendedEntityManager(String name)
    {
@@ -52,8 +52,13 @@ public class ExtendedEntityManager extends JPAEntityManagerDelegator implements 
    {
    }
 
-   public static void setXpcResolver(XPCResolver xpcResolver)
+   // Hack to set static via MC
+   public void setXpcResolver(XPCResolver xpcResolver)
    {
+      if (ExtendedEntityManager.xpcResolver != null)
+      {
+         throw new RuntimeException("xpcResolver was already set");
+      }
       ExtendedEntityManager.xpcResolver = xpcResolver;
    }
 
@@ -81,7 +86,7 @@ public class ExtendedEntityManager extends JPAEntityManagerDelegator implements 
    {
       if (null == xpcResolver)
       {
-         throw new RuntimeException("ExtendedEntityManager.xpcResolver is null which is a configuration error");
+         throw new RuntimeException("ExtendedEntityManager.xpcResolver is null (needs to be configured)");
       }
 
       EntityManager persistenceContext = xpcResolver.getExtendedPersistenceContext(identity);
@@ -89,5 +94,11 @@ public class ExtendedEntityManager extends JPAEntityManagerDelegator implements 
          throw new RuntimeException("Unable to determine persistenceContext: " + identity);
       return persistenceContext;
    }
+
+   public String toString()
+   {
+      return "ExtendedEntityManager: " + identity;
+   }
+
 }
 

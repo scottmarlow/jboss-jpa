@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -72,6 +71,8 @@ public class TransactionScopedEntityManager implements EntityManager, Externaliz
    {
       if (persistenceUnit == null) throw new NullPointerException("persistenceUnit must not be null");
       this.persistenceUnit = persistenceUnit;
+      if (log.isTraceEnabled())
+         log.trace("TransactionScopedEntityManager created for " + persistenceUnit.getName());
    }
 
    public TransactionScopedEntityManager()
@@ -90,6 +91,11 @@ public class TransactionScopedEntityManager implements EntityManager, Externaliz
       if ( persistenceUnit == null ) throw new IOException( "Unable to find persistence unit in registry: " + kernelName );
    }
 
+   public String toString()
+   {
+      return "TransactionScopedEntityManager: " + persistenceUnit.getName();
+   }
+
    /**
     * EJB 3.0 Persistence 5.6.1:
     * If the entity manager is invoked outside the scope of a transaction, any entities loaded from the database
@@ -97,7 +103,12 @@ public class TransactionScopedEntityManager implements EntityManager, Externaliz
     */
    private void detachEntitiesIfNoTx(EntityManager em)
    {
-      if (!persistenceUnit.isInTx()) em.clear(); // em will be closed by interceptor
+      if (!persistenceUnit.isInTx())
+      {
+         if (log.isTraceEnabled())
+            log.trace("no transaction active, detaching any entities in " + toString());
+         em.clear(); // em will be closed by interceptor
+      }
    }
    
    private void verifyInTx()
@@ -114,6 +125,8 @@ public class TransactionScopedEntityManager implements EntityManager, Externaliz
    {
       verifyInTx();
       getEntityManager().joinTransaction();
+      if (log.isTraceEnabled())
+         log.trace("joined transaction for " + toString());
    }
 
    public void clear()
