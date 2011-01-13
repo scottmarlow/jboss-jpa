@@ -23,13 +23,16 @@ package org.jboss.jpa.deployers.switchboard;
 
 import java.util.Collection;
 
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
+import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContextType;
 
 import org.jboss.jpa.deployment.ManagedEntityManagerFactory;
 import org.jboss.jpa.deployment.PersistenceUnitDeployment;
+import org.jboss.jpa.spi.PersistenceUnit;
 import org.jboss.jpa.spi.PersistenceUnitRegistry;
 import org.jboss.jpa.tx.TransactionScopedEntityManager;
-import org.jboss.jpa.util.ExtendedEntityManager;
 import org.jboss.logging.Logger;
 import org.jboss.switchboard.javaee.environment.PersistenceContextRefType;
 import org.jboss.switchboard.spi.Resource;
@@ -81,21 +84,31 @@ public class PersistenceContextRefResource implements Resource
    public Object getTarget()
    {
       boolean extendedPc = PersistenceContextType.EXTENDED.equals(pcRef.getPersistenceContextType());
-      ManagedEntityManagerFactory factory =
-      ((PersistenceUnitDeployment)PersistenceUnitRegistry.getPersistenceUnit(puSupplier)).getManagedFactory();
-      if (factory == null)
-      {
-         throw new RuntimeException("could not find persistenceUnit " + puSupplier);
-      }
 
       Object target;
       if (extendedPc)
       {
-         target = new ExtendedEntityManager(puSupplier);
+         Reference reference = new Reference(EntityManager.class.getName(), ExtendedEntityManagerObjectFactory.class.getName(), null);
+         reference.add(new StringRefAddr("puName", puSupplier));
+         target = reference;
       }
       else
       {
-         target = new TransactionScopedEntityManager(factory);
+         // get errors here rather than later when objectfactory is used.
+         PersistenceUnit pu = PersistenceUnitRegistry.getPersistenceUnit(puSupplier);
+         if (pu == null)
+         {
+            throw new RuntimeException("could not find persistenceUnit " + puSupplier);
+         }
+         ManagedEntityManagerFactory factory = ((PersistenceUnitDeployment)pu).getManagedFactory();
+         if (factory == null)  // check for error here
+         {
+            throw new RuntimeException("could not find EntityManagerFactory for persistenceUnit " + puSupplier);
+         }
+
+         Reference reference = new Reference(EntityManager.class.getName(), EntityManagerObjectFactory.class.getName(), null);
+         reference.add(new StringRefAddr("puName", puSupplier));
+         target = reference;
       }
       if(log.isTraceEnabled())  
          log.trace("returning target = " + target);
