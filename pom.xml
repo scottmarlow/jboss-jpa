@@ -12,7 +12,7 @@
 
    <groupId>org.jboss.jpa</groupId>
    <artifactId>jboss-jpa-aggregator</artifactId>
-   <version>3.0.0-alpha-4-SNAPSHOT</version>
+   <version>3.0.0-alpha-4</version>
    <packaging>pom</packaging>
    <name>JBoss Container Managed JPA Aggregator</name>
 
