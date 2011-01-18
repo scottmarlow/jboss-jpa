@@ -38,4 +38,9 @@ public class DefaultXPCResolver implements XPCResolver
    {
       return null;
    }
+
+   public EntityManager createExtendedPersistenceContext(String kernelName)
+   {
+      return null;
+   }
 }

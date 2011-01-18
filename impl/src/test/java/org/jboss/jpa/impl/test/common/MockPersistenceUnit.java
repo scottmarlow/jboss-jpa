@@ -54,6 +54,11 @@ public class MockPersistenceUnit implements PersistenceUnit
             // TODO
             return null;
          }
+
+         public EntityManager createExtendedPersistenceContext(String kernelName)
+         {
+            return null;
+         }
       };
    }
    

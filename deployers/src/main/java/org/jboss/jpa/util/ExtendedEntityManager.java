@@ -90,6 +90,10 @@ public class ExtendedEntityManager extends JPAEntityManagerDelegator implements 
       }
 
       EntityManager persistenceContext = xpcResolver.getExtendedPersistenceContext(identity);
+
+      if (persistenceContext == null)
+         persistenceContext = xpcResolver.createExtendedPersistenceContext(identity);
+
       if (persistenceContext == null)
          throw new RuntimeException("Unable to determine persistenceContext: " + identity);
       return persistenceContext;

@@ -41,4 +41,12 @@ public interface XPCResolver
     * @return the extended persistence context or null
     */
    EntityManager getExtendedPersistenceContext(String kernelName);
+
+   /**
+    * Create the extended persistence context (within the current context)
+    *
+    * @param kernelName kernelName the identification of the persistence context
+    * @return the extended persistence context or null
+    */
+   EntityManager createExtendedPersistenceContext(String kernelName);
 }
