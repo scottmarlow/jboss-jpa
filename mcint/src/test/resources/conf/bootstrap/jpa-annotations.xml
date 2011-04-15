@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<deployment xmlns="urn:jboss:bean-deployer:2.0">
-   <!-- FIXME: move to another xml -->
-   <bean name="PersistenceUnitDependencyResolver" class="org.jboss.jpa.mcint.test.common.DummyPersistenceUnitDependencyResolver"/>
-   
-   
-</deployment>

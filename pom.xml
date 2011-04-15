@@ -5,16 +5,16 @@
    <parent>
       <groupId>org.jboss</groupId>
       <artifactId>jboss-parent</artifactId>
-      <version>5</version>
+      <version>6-beta-1</version>
    </parent>
 
    <modelVersion>4.0.0</modelVersion>
 
    <groupId>org.jboss.jpa</groupId>
    <artifactId>jboss-jpa-aggregator</artifactId>
-   <version>3.0.0-alpha-6-SNAPSHOT</version>
+   <version>4.0.0-alpha-0-SNAPSHOT</version>
    <packaging>pom</packaging>
-   <name>JBoss Container Managed JPA Aggregator</name>
+   <name>JBoss Container Managed JPA integration</name>
 
    <build>
       <!-- make it easier to copy it around -->
@@ -29,7 +29,6 @@
                      <excludes>
                         <!-- use ${javax.persistence.groupId}:${javax.persistence.artifactId} -->
                         <exclude>org.hibernate:ejb3-persistence</exclude>
-                        <!-- use org.jboss.metadata:jboss-metadata-common -->
                         <exclude>org.jboss.metadata:jboss-metadata</exclude>
                      </excludes>
                   </bannedDependencies>
@@ -115,18 +114,6 @@
          </dependency>
 
          <dependency>
-            <groupId>org.jboss.metadata</groupId>
-            <artifactId>jboss-metadata-ear</artifactId>
-            <version>2.0.0.Alpha4</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.jboss.metadata</groupId>
-            <artifactId>jboss-metadata-ejb</artifactId>
-            <version>2.0.0-alpha-26</version>
-         </dependency>
-
-         <dependency>
             <groupId>org.jboss.slf4j</groupId>
             <artifactId>slf4j-jboss-logging</artifactId>
             <version>1.0.2.GA</version>
@@ -135,29 +122,10 @@
    </dependencyManagement>
 
    <modules>
-      <module>deployers</module>
-      <module>impl</module>
-      <module>mcint</module>
       <module>spi</module>
-      <module>vfs2</module>
-      <module>vfs3</module>
    </modules>
 
    <profiles>
-      <profile>
-         <id>JPA-1.0</id>
-         <activation>
-            <property>
-               <name>!dummy</name>
-            </property>
-         </activation>
-         <properties>
-            <JPA.groupId>org.hibernate</JPA.groupId>
-            <JPA.artifactId>ejb3-persistence</JPA.artifactId>
-            <JPA.version>1.0.2.GA</JPA.version>
-            <version.org.hibernate.hibernate-entitymanager>3.4.0.GA</version.org.hibernate.hibernate-entitymanager>
-         </properties>
-      </profile>
       <profile>
          <id>JPA-2.0</id>
          <activation>
