@@ -1,138 +1,144 @@
 <!--
   vi:ts=2:sw=2:expandtab
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <groupId>org.jboss</groupId>
-    <artifactId>jboss-parent</artifactId>
-    <version>6-beta-1</version>
-  </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-parent</artifactId>
+        <version>6-beta-1</version>
+    </parent>
 
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.jboss.jpa</groupId>
-  <artifactId>jboss-jpa-build</artifactId>
-  <version>4.0.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>JBoss Container Managed JPA Build</name>
-  <description>
-    JBoss CM JPA generic settings.
-  </description>
+    <groupId>org.jboss.jpa</groupId>
+    <artifactId>jboss-jpa-build</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>JBoss Container Managed JPA Build</name>
+    <description>
+        JBoss CM JPA generic settings.
+    </description>
 
-  <!--scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jpa/trunk</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jpa/trunk</developerConnection>
-    <url>http://viewvc.jboss.org/cgi-bin/viewvc.cgi/jbossas/projects/jpa/trunk/</url>
-  </scm -->
+    <!--scm>
+     <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jpa/trunk</connection>
+     <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jpa/trunk</developerConnection>
+     <url>http://viewvc.jboss.org/cgi-bin/viewvc.cgi/jbossas/projects/jpa/trunk/</url>
+   </scm -->
 
-  <distributionManagement>
-      <repository>
-        <id>jboss-releases-repository</id>
-        <name>JBoss Releases Repository</name>
-        <url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
-      </repository>
-  </distributionManagement>  
+    <distributionManagement>
+        <repository>
+            <id>jboss-releases-repository</id>
+            <name>JBoss Releases Repository</name>
+            <url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
-  <build>
-    <outputDirectory>${jpa.outputDirectory}</outputDirectory>
-    <testOutputDirectory>${jpa.testOutputDirectory}</testOutputDirectory>
+    <build>
+        <outputDirectory>${jpa.outputDirectory}</outputDirectory>
+        <testOutputDirectory>${jpa.testOutputDirectory}</testOutputDirectory>
 
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <tagBase>
-            https://svn.jboss.org/repos/jbossas/projects/jpa/tags
-          </tagBase>
-        </configuration>
-      </plugin>
-      
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <redirectTestOutputToFile>true</redirectTestOutputToFile>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
-  <profiles>
-    <profile>
-      <id>default</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <property><name>!dummy</name></property>
-      </activation>
-      <properties>
-        <jpa.outputDirectory>target/classes</jpa.outputDirectory>
-        <jpa.testOutputDirectory>target/tests-classes</jpa.testOutputDirectory>
-      </properties>
-    </profile>
-    <profile>
-      <id>eclipse</id>
-      <build>
-        <defaultGoal>process-test-resources</defaultGoal>
         <plugins>
-          <plugin>
-            <artifactId>maven-eclipse-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>eclipse</id>
-                <phase>process-test-resources</phase>
-                <goals>
-                  <goal>eclipse</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <downloadSources>true</downloadSources>
-              <buildOutputDirectory>${jpa.outputDirectory}</buildOutputDirectory>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-      <properties>
-        <jpa.outputDirectory>eclipse-target/classes</jpa.outputDirectory>
-        <jpa.testOutputDirectory>eclipse-target/tests-classes</jpa.testOutputDirectory>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>JPA-2.0</id>
-      <activation>
-        <property><name>JPA-2.0</name></property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-enforcer-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>obsoletes-org.hibernate:ejb3-persistence</id>
-                <goals>
-                  <goal>enforce</goal>
-                </goals>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
                 <configuration>
-                  <rules>
-                    <bannedDependencies>
-                      <excludes>
-                        <exclude>org.hibernate:ejb3-persistence</exclude>
-                      </excludes>
-                    </bannedDependencies>
-                  </rules>
+                    <tagBase>
+                        https://svn.jboss.org/repos/jbossas/projects/jpa/tags
+                    </tagBase>
                 </configuration>
-              </execution>
-            </executions>
-          </plugin>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                </configuration>
+            </plugin>
         </plugins>
-      </build>
-      <properties>
-        <JPA.groupId>org.hibernate.persistence</JPA.groupId>
-        <JPA.artifactId>jpa-api</JPA.artifactId>
-        <JPA.version>2.0-cr-1</JPA.version>
-        <version.org.hibernate.hibernate-entitymanager>3.5.0-Beta-2</version.org.hibernate.hibernate-entitymanager>
-      </properties>
-    </profile>
-  </profiles>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!dummy</name>
+                </property>
+            </activation>
+            <properties>
+                <jpa.outputDirectory>target/classes</jpa.outputDirectory>
+                <jpa.testOutputDirectory>target/tests-classes</jpa.testOutputDirectory>
+            </properties>
+        </profile>
+        <profile>
+            <id>eclipse</id>
+            <build>
+                <defaultGoal>process-test-resources</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-eclipse-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>eclipse</id>
+                                <phase>process-test-resources</phase>
+                                <goals>
+                                    <goal>eclipse</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <downloadSources>true</downloadSources>
+                            <buildOutputDirectory>${jpa.outputDirectory}</buildOutputDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <jpa.outputDirectory>eclipse-target/classes</jpa.outputDirectory>
+                <jpa.testOutputDirectory>eclipse-target/tests-classes</jpa.testOutputDirectory>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>JPA-2.0</id>
+            <activation>
+                <property>
+                    <name>JPA-2.0</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>obsoletes-org.hibernate:ejb3-persistence</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <bannedDependencies>
+                                            <excludes>
+                                                <exclude>org.hibernate:ejb3-persistence</exclude>
+                                            </excludes>
+                                        </bannedDependencies>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <JPA.groupId>org.hibernate.persistence</JPA.groupId>
+                <JPA.artifactId>jpa-api</JPA.artifactId>
+                <JPA.version>2.0-cr-1</JPA.version>
+                <version.org.hibernate.hibernate-entitymanager>3.5.0-Beta-2
+                </version.org.hibernate.hibernate-entitymanager>
+            </properties>
+        </profile>
+    </profiles>
 </project>

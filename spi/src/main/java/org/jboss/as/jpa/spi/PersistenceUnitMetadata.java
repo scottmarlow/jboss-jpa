@@ -22,35 +22,27 @@
 
 package org.jboss.as.jpa.spi;
 
-import java.util.Map;
+import org.jboss.jandex.Index;
+
+import javax.persistence.spi.PersistenceUnitInfo;
+import java.util.List;
 
 /**
- * PersistenceProvider adaptor
+ * Represents an extension of the persistence unit definition
  *
  * @author Scott Marlow
  */
-public interface PersistenceProviderAdaptor {
+public interface PersistenceUnitMetadata extends PersistenceUnitInfo {
 
-    /**
-     * Adds any provider specific properties (e.g. hibernate.transaction.manager_lookup_class)
-     *
-     * @param properties
-     */
-    void addProviderProperties(Map properties);
+    public String getScopedPersistenceUnitName();
 
-    /**
-     * Called right before persistence provider is invoked to create container entity manager factory.
-     * afterCreateContainerEntityManagerFactory() will always be called after the container entity manager factory
-     * is created.
-     *
-     * @param pu
-     */
-    void beforeCreateContainerEntityManagerFactory(PersistenceUnitMetadata pu);
+    public String getJtaDataSourceName();
 
-    /**
-     * Called right after persistence provider is invoked to create container entity manager factory.
-     */
-    void afterCreateContainerEntityManagerFactory(PersistenceUnitMetadata pu);
+    public String getNonJtaDataSourceName();
+
+    public Index getAnnotationIndex();
+
+    public List<String> getJarFiles();
+
 
 }
-

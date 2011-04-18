@@ -20,37 +20,34 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.as.jpa.spi;
+package org.jboss.as.jpa.hibernate36;
 
-import java.util.Map;
+import org.jboss.vfs.VirtualFile;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * PersistenceProvider adaptor
+ * VFS named input stream.
  *
+ * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  * @author Scott Marlow
  */
-public interface PersistenceProviderAdaptor {
+public class HibernateVirtualFileNamedInputStream extends HibernateLazyNamedInputStream {
+    private VirtualFile file;
 
-    /**
-     * Adds any provider specific properties (e.g. hibernate.transaction.manager_lookup_class)
-     *
-     * @param properties
-     */
-    void addProviderProperties(Map properties);
+    private static String name(VirtualFile file) {
+        if (file == null)
+            throw new IllegalArgumentException("Null file");
+        return file.getName();
+    }
 
-    /**
-     * Called right before persistence provider is invoked to create container entity manager factory.
-     * afterCreateContainerEntityManagerFactory() will always be called after the container entity manager factory
-     * is created.
-     *
-     * @param pu
-     */
-    void beforeCreateContainerEntityManagerFactory(PersistenceUnitMetadata pu);
+    public HibernateVirtualFileNamedInputStream(VirtualFile file) {
+        super(name(file));
+        this.file = file;
+    }
 
-    /**
-     * Called right after persistence provider is invoked to create container entity manager factory.
-     */
-    void afterCreateContainerEntityManagerFactory(PersistenceUnitMetadata pu);
-
+    protected InputStream getLazyStream() throws IOException {
+        return file.openStream();
+    }
 }
-

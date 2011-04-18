@@ -20,37 +20,39 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.as.jpa.spi;
+package org.jboss.as.jpa.hibernate36;
 
-import java.util.Map;
+import org.hibernate.HibernateException;
+import org.hibernate.transaction.JNDITransactionManagerLookup;
+
+import javax.transaction.TransactionManager;
+import java.util.Properties;
 
 /**
- * PersistenceProvider adaptor
+ * Provide the transaction manager to Hibernate.
+ *
+ * HibernateTransactionManagerLookup.setTransactionManager() must be called to configure the TransactionManager.
+ *
  *
  * @author Scott Marlow
  */
-public interface PersistenceProviderAdaptor {
+public class HibernateTransactionManagerLookup extends JNDITransactionManagerLookup {
 
-    /**
-     * Adds any provider specific properties (e.g. hibernate.transaction.manager_lookup_class)
-     *
-     * @param properties
-     */
-    void addProviderProperties(Map properties);
+    private static TransactionManager transactionManager;
+    // not used
+    protected String getName() {
+        return null;        // "java:/TransactionManager";
+    }
 
-    /**
-     * Called right before persistence provider is invoked to create container entity manager factory.
-     * afterCreateContainerEntityManagerFactory() will always be called after the container entity manager factory
-     * is created.
-     *
-     * @param pu
-     */
-    void beforeCreateContainerEntityManagerFactory(PersistenceUnitMetadata pu);
+    public String getUserTransactionName() {
+        return "UserTransaction";
+    }
 
-    /**
-     * Called right after persistence provider is invoked to create container entity manager factory.
-     */
-    void afterCreateContainerEntityManagerFactory(PersistenceUnitMetadata pu);
+    public TransactionManager getTransactionManager(Properties props) throws HibernateException {
+        return transactionManager;
+    }
 
+    public void setTransactionManager(TransactionManager tm){
+            transactionManager = tm;
+        }
 }
-

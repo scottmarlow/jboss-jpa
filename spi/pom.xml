@@ -1,34 +1,38 @@
-<!--
-  vi:ts=2:sw=2:expandtab
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <groupId>org.jboss.jpa</groupId>
-    <artifactId>jboss-jpa-aggregator</artifactId>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.jboss.jpa</groupId>
+        <artifactId>jboss-jpa-integrator</artifactId>
+        <version>4.0.0-alpha-0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>jboss-jpa-spi</artifactId>
     <version>4.0.0-alpha-0-SNAPSHOT</version>
-  </parent>
+    <packaging>jar</packaging>
+    <name>JBoss Container Managed JPA SPI</name>
+    <description>
+        The JBoss Container Managed JPA SPI.
+    </description>
 
-  <modelVersion>4.0.0</modelVersion>
+    <dependencies>
+        <dependency>
+            <groupId>${javax.persistence.groupId}</groupId>
+            <artifactId>${javax.persistence.artifactId}</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging-spi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jandex</artifactId>
+        </dependency>
 
-  <artifactId>jboss-jpa-spi</artifactId>
-  <packaging>jar</packaging>
-  <name>JBoss Container Managed JPA SPI</name>
-  <description>
-    The JBoss Container Managed JPA SPI.
-  </description>
-  
-  <dependencies>
-    <dependency>
-      <groupId>${javax.persistence.groupId}</groupId>
-      <artifactId>${javax.persistence.artifactId}</artifactId>
-    </dependency>
-  	 <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.logging</groupId>
-      <artifactId>jboss-logging-spi</artifactId>
-    </dependency>
-  </dependencies>
+    </dependencies>
 </project>
