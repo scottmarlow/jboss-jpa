@@ -16,6 +16,10 @@
         The JBoss Container Managed JPA SPI.
     </description>
 
+    <properties>
+        <version.org.jboss.spec.javax.transaction.jboss-transaction-api_1.1_spec>1.0.0.Final</version.org.jboss.spec.javax.transaction.jboss-transaction-api_1.1_spec>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${javax.persistence.groupId}</groupId>
@@ -33,6 +37,10 @@
             <groupId>org.jboss</groupId>
             <artifactId>jandex</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            <version>${version.org.jboss.spec.javax.transaction.jboss-transaction-api_1.1_spec}</version>
+        </dependency>
     </dependencies>
 </project>
