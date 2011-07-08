@@ -135,6 +135,7 @@
     <modules>
         <module>spi</module>
         <module>hibernate36</module>
+        <module>hibernate40</module>
     </modules>
 
     <profiles>

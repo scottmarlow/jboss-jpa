@@ -22,8 +22,6 @@
 
 package org.jboss.as.jpa.spi;
 
-import org.jboss.jandex.Index;
-
 import javax.persistence.spi.PersistenceUnitInfo;
 import java.util.List;
 
@@ -40,7 +38,7 @@ public interface PersistenceUnitMetadata extends PersistenceUnitInfo {
 
     public String getNonJtaDataSourceName();
 
-    public Index getAnnotationIndex();
+    public Object getAnnotationIndex();  // TODO:  rename to privateData?
 
     public List<String> getJarFiles();
 

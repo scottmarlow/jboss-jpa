@@ -20,8 +20,10 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.as.jpa.hibernate36;
+package org.jboss.as.jpa.hibernate40;
 
+import org.hibernate.cfg.AvailableSettings;
+import org.hibernate.cfg.Configuration;
 import org.jboss.as.jpa.spi.PersistenceProviderAdaptor;
 import org.jboss.as.jpa.spi.PersistenceUnitMetadata;
 
@@ -36,16 +38,37 @@ public class HibernatePersistenceProviderAdaptor implements PersistenceProviderA
 
     @Override
     public void addProviderProperties(Map properties, PersistenceUnitMetadata pu) {
-        properties.put("hibernate.transaction.manager_lookup_class", "org.jboss.as.jpa.hibernate.HibernateTransactionManagerLookup");
-        properties.put("hibernate.id.new_generator_mappings", "true");
-        properties.put("hibernate.ejb.resource_scanner", "org.jboss.as.jpa.hibernate.HibernateAnnotationScanner");
+        properties.put(Configuration.USE_NEW_ID_GENERATOR_MAPPINGS, "true");
+        properties.put(org.hibernate.ejb.AvailableSettings.SCANNER, "org.jboss.as.jpa.hibernate.HibernateAnnotationScanner");
+        properties.put(AvailableSettings.APP_CLASSLOADER, pu.getClassLoader());
+        properties.put(AvailableSettings.JTA_PLATFORM, new JBossAppServerJtaPlatform());
     }
-
 
     @Override
     public Iterable getProviderDependencies(PersistenceUnitMetadata pu) {
+//        String cacheManager;
+        // AS7-680 Add BinderService dependency for infinispan hibernate 2LC
+//        if ((cacheManager = pu.getProperties().getProperty("hibernate.cache.infinispan.cachemanager")) != null) {
+//            ArrayList<ServiceName> result = new ArrayList<ServiceName>();
+//            result.add(adjustJndiName(cacheManager));
+//            return result;
+//        }
         return null;
     }
+/*
+    private ServiceName adjustJndiName(String jndiName) {
+        jndiName = toJndiName(jndiName).toString();
+        int index = jndiName.indexOf("/");
+        String namespace = (index > 5) ? jndiName.substring(5, index) : null;
+        String binding = (index > 5) ? jndiName.substring(index + 1) : jndiName.substring(5);
+        ServiceName naming = (namespace != null) ? ContextNames.JAVA_CONTEXT_SERVICE_NAME.append(namespace) : ContextNames.JAVA_CONTEXT_SERVICE_NAME;
+        return naming.append(binding);
+    }
+
+    private static JndiName toJndiName(String value) {
+        return value.startsWith("java:") ? JndiName.of(value) : JndiName.of("java:jboss").append(value.startsWith("/") ? value.substring(1) : value);
+    }
+*/
 
     @Override
     public void beforeCreateContainerEntityManagerFactory(PersistenceUnitMetadata pu) {
@@ -58,4 +81,6 @@ public class HibernatePersistenceProviderAdaptor implements PersistenceProviderA
         // clear backdoor annotation scanner access to pu
         //HibernateAnnotationScanner.clearThreadLocalPersistenceUnitMetadata();
     }
+
 }
+
