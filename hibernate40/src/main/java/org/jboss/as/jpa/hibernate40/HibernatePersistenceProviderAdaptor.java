@@ -24,8 +24,9 @@ package org.jboss.as.jpa.hibernate40;
 
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
-import org.jboss.as.jpa.spi.PersistenceProviderAdaptor;
-import org.jboss.as.jpa.spi.PersistenceUnitMetadata;
+import org.jboss.jpa.spi.JtaManager;
+import org.jboss.jpa.spi.PersistenceProviderAdaptor;
+import org.jboss.jpa.spi.PersistenceUnitMetadata;
 
 import java.util.Map;
 
@@ -36,12 +37,18 @@ import java.util.Map;
  */
 public class HibernatePersistenceProviderAdaptor implements PersistenceProviderAdaptor {
 
+    private JtaManager jtaManager;
+
+    public void setJtaManager(JtaManager jtaManager) {
+        this.jtaManager = jtaManager;
+    }
+
     @Override
     public void addProviderProperties(Map properties, PersistenceUnitMetadata pu) {
         properties.put(Configuration.USE_NEW_ID_GENERATOR_MAPPINGS, "true");
-        properties.put(org.hibernate.ejb.AvailableSettings.SCANNER, "org.jboss.as.jpa.hibernate.HibernateAnnotationScanner");
+        //properties.put(org.hibernate.ejb.AvailableSettings.SCANNER, "org.jboss.as.jpa.hibernate.HibernateAnnotationScanner");
         properties.put(AvailableSettings.APP_CLASSLOADER, pu.getClassLoader());
-        properties.put(AvailableSettings.JTA_PLATFORM, new JBossAppServerJtaPlatform());
+        properties.put(AvailableSettings.JTA_PLATFORM, new JBossAppServerJtaPlatform(jtaManager));
     }
 
     @Override

@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.as.jpa.spi;
+package org.jboss.jpa.spi;
 
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionSynchronizationRegistry;
@@ -30,7 +30,7 @@ import javax.transaction.TransactionSynchronizationRegistry;
  *
  * @author Scott Marlow
  */
-public interface JtaPlatform {
+public interface JtaManager {
     TransactionSynchronizationRegistry getSynchronizationRegistry();
 
     TransactionManager locateTransactionManager();

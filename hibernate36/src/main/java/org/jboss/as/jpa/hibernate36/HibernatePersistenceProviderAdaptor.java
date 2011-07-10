@@ -22,8 +22,9 @@
 
 package org.jboss.as.jpa.hibernate36;
 
-import org.jboss.as.jpa.spi.PersistenceProviderAdaptor;
-import org.jboss.as.jpa.spi.PersistenceUnitMetadata;
+import org.jboss.jpa.spi.JtaManager;
+import org.jboss.jpa.spi.PersistenceProviderAdaptor;
+import org.jboss.jpa.spi.PersistenceUnitMetadata;
 
 import java.util.Map;
 
@@ -33,6 +34,11 @@ import java.util.Map;
  * @author Scott Marlow
  */
 public class HibernatePersistenceProviderAdaptor implements PersistenceProviderAdaptor {
+
+    @Override
+    public void setJtaManager(JtaManager jtaManager) {
+        HibernateTransactionManagerLookup.setTransactionManager(jtaManager.locateTransactionManager());
+    }
 
     @Override
     public void addProviderProperties(Map properties, PersistenceUnitMetadata pu) {

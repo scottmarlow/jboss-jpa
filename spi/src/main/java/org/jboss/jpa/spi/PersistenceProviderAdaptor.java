@@ -20,17 +20,23 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.as.jpa.spi;
+package org.jboss.jpa.spi;
 
 import java.util.Map;
 
 /**
- * PersistenceProvider adaptor
+ * Each PersistenceProvider needs a PersistenceProviderAdaptor implementation to be used with the
+ * AS JPA subsystem.
  *
  * @author Scott Marlow
  */
 public interface PersistenceProviderAdaptor {
 
+    /**
+     * pass the JtaManager in for internal use by PersistenceProviderAdaptor implementer
+     * @param jtaManager
+     */
+    void setJtaManager(JtaManager jtaManager);
 
     /**
      * Adds any provider specific properties (e.g. hibernate.transaction.manager_lookup_class)

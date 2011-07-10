@@ -52,7 +52,7 @@ public class HibernateTransactionManagerLookup extends JNDITransactionManagerLoo
         return transactionManager;
     }
 
-    public void setTransactionManager(TransactionManager tm){
+    public static void setTransactionManager(TransactionManager tm){
             transactionManager = tm;
         }
 }
