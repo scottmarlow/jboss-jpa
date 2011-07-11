@@ -20,8 +20,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.as.jpa.hibernate36;
+package org.jboss.jpa.hibernate;
 
+import org.jboss.jpa.hibernate.HibernateTransactionManagerLookup;
 import org.jboss.jpa.spi.JtaManager;
 import org.jboss.jpa.spi.PersistenceProviderAdaptor;
 import org.jboss.jpa.spi.PersistenceUnitMetadata;
@@ -42,7 +43,7 @@ public class HibernatePersistenceProviderAdaptor implements PersistenceProviderA
 
     @Override
     public void addProviderProperties(Map properties, PersistenceUnitMetadata pu) {
-        properties.put("hibernate.transaction.manager_lookup_class", "org.jboss.as.jpa.hibernate.HibernateTransactionManagerLookup");
+        properties.put("hibernate.transaction.manager_lookup_class", "org.jboss.jpa.hibernate.HibernateTransactionManagerLookup");
         properties.put("hibernate.id.new_generator_mappings", "true");
         properties.put("hibernate.ejb.resource_scanner", "org.jboss.as.jpa.hibernate.HibernateAnnotationScanner");
     }
